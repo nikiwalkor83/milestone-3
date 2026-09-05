@@ -1,4 +1,289 @@
 ---
-title: "Project"
-format: html
+title: "Car Performance Testing Lab"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+execute:
+  echo: false
+  warning: false
+  message: false
 ---
+
+## Project Plan
+
+For my final project, I plan to create an interactive car performance simulator using data from different vehicles. I want to explore how factors such as horsepower, weight, drivetrain, and engine size affect a car's performance. The goal is to let users change a few vehicle characteristics and see how the predicted performance changes.
+
+I am especially interested in horsepower, weight, and power-to-weight ratio because they can help explain why some cars are faster than others.
+
+## Vehicle Performance Analysis
+
+### Explore the Data
+
+Use the horsepower range to explore the correlation between horsepower and 0–60 mph time. Cars inside your selected range are highlighted, while the rest of the dataset remains visible for comparison.
+
+```{r}
+#| label: car-performance-plot
+#| out-width: "100%"
+
+library(tidyverse)
+library(plotly)
+library(crosstalk)
+library(htmltools)
+
+# Read the uploaded vehicle dataset and ensure numeric types
+car_data <- read_csv("Car Dataset 1945-2020.csv", show_col_types = FALSE) |>
+  mutate(
+    engine_hp = as.numeric(engine_hp),
+    `acceleration_0_100_km/h_s` = as.numeric(`acceleration_0_100_km/h_s`),
+    curb_weight_kg = as.numeric(curb_weight_kg)
+  ) |>
+  filter(
+    !is.na(engine_hp),
+    !is.na(`acceleration_0_100_km/h_s`),
+    !is.na(drive_wheels),
+    !is.na(curb_weight_kg),
+    curb_weight_kg > 400,
+    curb_weight_kg < 5000,
+    engine_hp > 0,
+    `acceleration_0_100_km/h_s` > 0
+  ) |>
+  mutate(
+    drivetrain = case_when(
+      drive_wheels == "Front wheel drive" ~ "FWD",
+      drive_wheels == "Rear wheel drive" ~ "RWD",
+      TRUE ~ "AWD"
+    )
+  )
+
+# Sample 150 cars across horsepower brackets for a balanced spread
+set.seed(42)
+car_sample <- car_data |>
+  mutate(hp_bracket = cut(engine_hp, breaks = c(0, 100, 200, 300, 400, 600, Inf), include.lowest = TRUE)) |>
+  slice_sample(n = 25, by = hp_bracket) |>
+  mutate(id = as.character(row_number()))
+
+# Actual minimum and maximum horsepower values in the dataset sample
+min_hp <- floor(min(car_sample$engine_hp, na.rm = TRUE))
+max_hp <- ceiling(max(car_sample$engine_hp, na.rm = TRUE))
+
+# SharedData used only to drive the dual range slider UI widget
+sd_slider <- SharedData$new(car_sample, group = "slider_control_group")
+
+# Interactive Plotly scatterplot keeping all 150 cars visible at all times
+p <- plot_ly(
+  car_sample,
+  x = ~engine_hp,
+  y = ~`acceleration_0_100_km/h_s`,
+  color = ~drivetrain,
+  colors = c(
+    "FWD" = "#e41a1c",
+    "RWD" = "#377eb8",
+    "AWD" = "#4daf4a"
+  ),
+  size = ~curb_weight_kg,
+  sizes = c(8, 20),
+  type = "scatter",
+  mode = "markers",
+  marker = list(
+    opacity = 0.85,
+    line = list(width = 1, color = "#ffffff")
+  ),
+  selected = list(
+    marker = list(opacity = 0.95, line = list(width = 1.2, color = "#ffffff"))
+  ),
+  unselected = list(
+    marker = list(opacity = 0.15, line = list(width = 0))
+  ),
+  text = ~paste0(
+    "<b>", Make, " ", Modle, "</b><br>",
+    "Horsepower: ", engine_hp, " HP<br>",
+    "0–60 mph Time: ", `acceleration_0_100_km/h_s`, " s<br>",
+    "Weight: ", format(curb_weight_kg, big.mark = ","), " kg<br>",
+    "Drivetrain: ", drivetrain
+  ),
+  hoverinfo = "text"
+) |>
+  layout(
+    xaxis = list(
+      title = list(text = "<b>Horsepower (HP)</b>"),
+      range = c(0, 800),
+      zeroline = FALSE
+    ),
+    yaxis = list(
+      title = list(text = "<b>0–60 mph Time (seconds)</b>"),
+      autorange = "reversed",
+      zeroline = FALSE
+    ),
+    legend = list(
+      title = list(text = "<b>Drivetrain</b>"),
+      orientation = "h",
+      x = 0,
+      y = -0.25
+    ),
+    hoverlabel = list(bgcolor = "white")
+  )
+
+js_logic <- sprintf("
+document.addEventListener('DOMContentLoaded', function() {
+  function initHighlight() {
+    var gd = document.querySelector('.plotly.html-widget');
+    var sliderInput = window.jQuery && window.jQuery('#hp_filter input');
+    var slider = sliderInput && sliderInput.data('ionRangeSlider');
+
+    if (gd && gd.data && gd._fullLayout && slider) {
+      function updateHighlight(fromHp, toHp) {
+        var dtSelect = document.getElementById('drivetrain-filter');
+        var selectedDt = dtSelect ? dtSelect.value : 'ALL';
+
+        var selectedTraces = [];
+        var selectedPointsArray = [];
+        var opacitiesArray = [];
+        var totalMatching = 0;
+
+        for (var i = 0; i < gd.data.length; i++) {
+          var tr = gd.data[i];
+          var matches = [];
+          var opacities = [];
+          var isDtMatch = (selectedDt === 'ALL' || tr.name === selectedDt);
+
+          if (tr.x) {
+            for (var j = 0; j < tr.x.length; j++) {
+              var inRange = (tr.x[j] >= fromHp && tr.x[j] <= toHp);
+              if (isDtMatch && inRange) {
+                matches.push(j);
+                opacities.push(0.95);
+              } else {
+                opacities.push(0.15);
+              }
+            }
+          }
+
+          selectedTraces.push(i);
+          selectedPointsArray.push(matches);
+          opacitiesArray.push(opacities);
+          totalMatching += matches.length;
+        }
+
+        Plotly.restyle(gd, {
+          'selectedpoints': selectedPointsArray,
+          'marker.opacity': opacitiesArray
+        }, selectedTraces);
+
+        var countEl = document.getElementById('car-count');
+        var minEl = document.getElementById('hp-min-val');
+        var maxEl = document.getElementById('hp-max-val');
+        var driveEl = document.getElementById('drivetrain-val');
+        var alertEl = document.getElementById('no-cars-alert');
+
+        if (countEl) countEl.textContent = totalMatching;
+        if (minEl) minEl.textContent = fromHp;
+        if (maxEl) maxEl.textContent = toHp;
+        if (driveEl && dtSelect) driveEl.textContent = dtSelect.options[dtSelect.selectedIndex].text;
+
+        if (alertEl) {
+          alertEl.style.display = (totalMatching === 0) ? 'block' : 'none';
+        }
+      }
+
+      // Initial highlight with starting slider range
+      updateHighlight(slider.result.from, slider.result.to);
+
+      // Smoothly update highlighting as slider handles move
+      window.jQuery(document).on('change input', '#hp_filter input', function() {
+        var s = window.jQuery(this).data('ionRangeSlider');
+        if (s) {
+          updateHighlight(s.result.from, s.result.to);
+        }
+      });
+
+      // Update when drivetrain selector changes
+      window.jQuery('#drivetrain-filter').on('change', function() {
+        var s = window.jQuery('#hp_filter input').data('ionRangeSlider');
+        var fromVal = s ? s.result.from : %d;
+        var toVal = s ? s.result.to : %d;
+        updateHighlight(fromVal, toVal);
+      });
+    } else {
+      setTimeout(initHighlight, 50);
+    }
+  }
+  initHighlight();
+});
+", min_hp, max_hp)
+
+tagList(
+  div(
+    class = "card p-3 mb-3 bg-light border-0 shadow-sm",
+    style = "border-radius: 8px;",
+    div(
+      class = "row g-3 align-items-center",
+      div(
+        class = "col-md-8",
+        filter_slider(
+          id = "hp_filter",
+          label = "Horsepower Range (HP):",
+          sharedData = sd_slider,
+          column = ~engine_hp,
+          min = min_hp,
+          max = max_hp,
+          step = 10,
+          width = "100%"
+        )
+      ),
+      div(
+        class = "col-md-4",
+        div(
+          class = "form-group",
+          tags$label(
+            `for` = "drivetrain-filter",
+            class = "control-label fw-bold mb-1",
+            style = "font-size: 0.9rem;",
+            "Drivetrain Focus:"
+          ),
+          tags$select(
+            id = "drivetrain-filter",
+            class = "form-select form-select-sm",
+            tags$option(value = "ALL", "All Drivetrains", selected = NA),
+            tags$option(value = "FWD", "FWD"),
+            tags$option(value = "RWD", "RWD"),
+            tags$option(value = "AWD", "AWD")
+          )
+        )
+      )
+    ),
+    div(
+      style = "margin-top: 10px; font-size: 0.95rem; color: #495057;",
+      "Currently highlighting ",
+      tags$strong(id = "car-count", nrow(car_sample)),
+      " cars in the selected range (",
+      tags$span(id = "hp-min-val", min_hp),
+      " – ",
+      tags$span(id = "hp-max-val", max_hp),
+      " HP, ",
+      tags$span(id = "drivetrain-val", "All Drivetrains"),
+      ") out of ",
+      nrow(car_sample),
+      " total cars."
+    ),
+    div(
+      id = "no-cars-alert",
+      class = "alert alert-warning text-center mt-3 mb-0",
+      style = "display: none; border-radius: 6px;",
+      tags$strong("No cars in the dataset match the selected range. "),
+      "Adjust the horsepower slider to highlight vehicles."
+    )
+  ),
+  p,
+  tags$script(HTML(js_logic))
+)
+```
+
+## What I Want to Investigate
+
+While higher horsepower clearly leads to faster acceleration times, horsepower alone does not tell the whole story. I want to examine how curb weight counteracts engine output, and how traction from different drivetrain systems (like All-Wheel Drive versus Front- or Rear-Wheel Drive) impacts off-the-line launch speed. By comparing these variables together, we can better understand which factors have the biggest effect on real-world vehicle performance.
+
+## Future Simulator
+
+For the final project, I will translate these empirical relationships into an interactive car performance simulator. Users will be able to input or tweak specific car specifications—such as horsepower, vehicle curb weight, drivetrain configuration, and engine displacement—and instantly see estimated acceleration figures and performance metrics.
