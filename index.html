@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Car Performance Testing Lab</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="project_files/libs/clipboard/clipboard.min.js"></script>
+<script src="project_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="project_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="project_files/libs/quarto-html/popper.min.js"></script>
+<script src="project_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="project_files/libs/quarto-html/anchor.min.js"></script>
+<link href="project_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="project_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="project_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="project_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="project_files/libs/bootstrap/bootstrap-f7cb176a5655d87091c79aade52d9459.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="project_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="project_files/libs/ionrangeslider-javascript-2.3.1/js/ion.rangeSlider.min.js"></script>
+<script src="project_files/libs/strftime-0.9.2/strftime-min.js"></script>
+<link href="project_files/libs/ionrangeslider-css-2.3.1/css/ion.rangeSlider.css" rel="stylesheet">
+<link href="project_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="project_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<link href="project_files/libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="project_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="project_files/libs/plotly-binding-4.12.1/plotly.js"></script>
+<script src="project_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="project_files/libs/plotly-htmlwidgets-css-2.25.2/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="project_files/libs/plotly-main-2.25.2/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#project-plan" id="toc-project-plan" class="nav-link active" data-scroll-target="#project-plan">Project Plan</a></li>
+  <li><a href="#vehicle-performance-analysis" id="toc-vehicle-performance-analysis" class="nav-link" data-scroll-target="#vehicle-performance-analysis">Vehicle Performance Analysis</a>
+  <ul class="collapse">
+  <li><a href="#explore-the-data" id="toc-explore-the-data" class="nav-link" data-scroll-target="#explore-the-data">Explore the Data</a></li>
+  </ul></li>
+  <li><a href="#what-i-want-to-investigate" id="toc-what-i-want-to-investigate" class="nav-link" data-scroll-target="#what-i-want-to-investigate">What I Want to Investigate</a></li>
+  <li><a href="#future-simulator" id="toc-future-simulator" class="nav-link" data-scroll-target="#future-simulator">Future Simulator</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Car Performance Testing Lab</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="project-plan" class="level2">
+<h2 class="anchored" data-anchor-id="project-plan">Project Plan</h2>
+<p>For my final project, I plan to create an interactive car performance simulator using data from different vehicles. I want to explore how factors such as horsepower, weight, drivetrain, and engine size affect a car’s performance. The goal is to let users change a few vehicle characteristics and see how the predicted performance changes.</p>
+<p>I am especially interested in horsepower, weight, and power-to-weight ratio because they can help explain why some cars are faster than others.</p>
+</section>
+<section id="vehicle-performance-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="vehicle-performance-analysis">Vehicle Performance Analysis</h2>
+<section id="explore-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="explore-the-data">Explore the Data</h3>
+<p>Use the horsepower range to explore the correlation between horsepower and 0–60 mph time. Cars inside your selected range are highlighted, while the rest of the dataset remains visible for comparison.</p>
+<div class="cell">
+<div class="cell-output-display no-overflow-x">
+<div class="card p-3 mb-3 bg-light border-0 shadow-sm" style="border-radius: 8px;">
+<div class="row g-3 align-items-center">
+<div class="col-md-8">
+<div class="form-group crosstalk-input crosstalk-input-slider js-range-slider" id="hp_filter" style="width: 100%;">
+<label class="control-label" for="hp_filter">Horsepower Range (HP):</label>
+<input data-skin="shiny" data-type="double" data-min="52" data-max="1001" data-from="52" data-to="1001" data-step="10" data-grid="true" data-grid-num="9.49" data-grid-snap="false" data-prettify-separator="," data-keyboard="true" data-keyboard-step="1.05374077976818" data-drag-interval="true" data-data-type="number">
+<script type="application/json" data-for="hp_filter">{
+  "values": [52, 64, 67, 67, 73, 74, 75, 77, 79, 82, 84, 84, 86, 87, 90, 90, 90, 90, 90, 90, 90, 90, 90, 97, 97, 103, 103, 106, 109, 113, 115, 115, 116, 117, 117, 120, 130, 136, 140, 143, 144, 150, 150, 150, 155, 170, 185, 192, 195, 200, 202, 204, 204, 204, 211, 218, 220, 220, 225, 231, 233, 235, 245, 245, 249, 250, 250, 258, 258, 265, 265, 269, 275, 288, 300, 304, 306, 306, 306, 306, 306, 309, 315, 315, 315, 324, 324, 326, 329, 339, 339, 340, 340, 344, 345, 345, 350, 350, 367, 380, 407, 408, 408, 408, 413, 418, 432, 435, 450, 450, 470, 476, 485, 487, 495, 507, 510, 530, 530, 555, 557, 557, 570, 580, 585, 603, 605, 605, 610, 620, 620, 625, 630, 630, 630, 630, 630, 630, 635, 635, 640, 640, 641, 642, 660, 660, 700, 800, 887, 1001],
+  "keys": ["93", "85", "90", "98", "80", "100", "78", "87", "94", "86", "88", "91", "95", "99", "76", "77", "79", "81", "83", "89", "92", "96", "97", "82", "84", "57", "67", "69", "61", "62", "53", "65", "73", "51", "52", "63", "64", "72", "74", "60", "59", "54", "66", "71", "55", "58", "56", "75", "68", "70", "35", "30", "32", "34", "27", "42", "39", "45", "29", "49", "33", "26", "41", "46", "28", "36", "44", "38", "50", "40", "43", "48", "31", "37", "47", "7", "9", "10", "14", "18", "19", "2", "5", "8", "23", "4", "22", "3", "17", "1", "25", "15", "20", "11", "12", "16", "13", "21", "24", "6", "107", "102", "113", "121", "105", "112", "123", "120", "118", "125", "101", "110", "108", "104", "122", "103", "116", "109", "119", "111", "114", "115", "124", "106", "117", "148", "126", "138", "149", "131", "146", "145", "127", "128", "136", "139", "142", "144", "134", "141", "135", "140", "133", "143", "130", "137", "150", "147", "132", "129"],
+  "group": ["slider_control_group"]
+}</script>
+</div>
+</div>
+<div class="col-md-4">
+<div class="form-group">
+<label for="drivetrain-filter" class="control-label fw-bold mb-1" style="font-size: 0.9rem;">Drivetrain Focus:</label>
+<select id="drivetrain-filter" class="form-select form-select-sm">
+<option value="ALL" selected="">All Drivetrains</option>
+<option value="FWD">FWD</option>
+<option value="RWD">RWD</option>
+<option value="AWD">AWD</option>
+</select>
+</div>
+</div>
+</div>
+<div style="margin-top: 10px; font-size: 0.95rem; color: #495057;">
+Currently highlighting 
+<strong id="car-count">150</strong>
+ cars in the selected range (
+<span id="hp-min-val">52</span>
+ – 
+<span id="hp-max-val">1001</span>
+ HP, 
+<span id="drivetrain-val">All Drivetrains</span>
+) out of 
+150
+ total cars.
+</div>
+<div id="no-cars-alert" class="alert alert-warning text-center mt-3 mb-0" style="display: none; border-radius: 6px;">
+<strong>No cars in the dataset match the selected range. </strong>
+Adjust the horsepower slider to highlight vehicles.
+</div>
+</div>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-0d9b7960e4e2b5d97e1e" style="width:100%;height:400px;"></div>
+<script type="application/json" data-for="htmlwidget-0d9b7960e4e2b5d97e1e">{"x":{"visdat":{"827174c478f0":["function () ","plotlyVisDat"]},"cur_data":"827174c478f0","attrs":{"827174c478f0":{"x":{},"y":{},"mode":"markers","marker":{"opacity":0.84999999999999998,"line":{"width":1,"color":"#ffffff"}},"selected":{"marker":{"opacity":0.94999999999999996,"line":{"width":1.2,"color":"#ffffff"}}},"unselected":{"marker":{"opacity":0.14999999999999999,"line":{"width":0}}},"text":{},"hoverinfo":"text","color":{},"size":{},"colors":["#e41a1c","#377eb8","#4daf4a"],"alpha_stroke":1,"sizes":[8,20],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"<b>Horsepower (HP)<\/b>"},"range":[0,800],"zeroline":false},"yaxis":{"domain":[0,1],"automargin":true,"title":{"text":"<b>0–60 mph Time (seconds)<\/b>"},"autorange":"reversed","zeroline":false},"legend":{"title":{"text":"<b>Drivetrain<\/b>"},"orientation":"h","x":0,"y":-0.25},"hoverlabel":{"bgcolor":"white"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[315,315,306,306,344,306,340,340,339,249,275,233,288,265,250,245,300,269,231,195,200,136,116,79,507,413,407,485,530,555,408,510,585,450,530,435,450,605,630,1001,660,887,641,635,640,605,640,635,642,625,800,610,700],"y":[7.2999999999999998,6.5,5.0999999999999996,6.5,5.7999999999999998,6.7000000000000002,7.9000000000000004,5.0999999999999996,6.9000000000000004,7.7999999999999998,7.7999999999999998,7.5999999999999996,9.5,5,10.800000000000001,6.0999999999999996,6,8.9000000000000004,7,8.9000000000000004,7.5,11.300000000000001,12.1,19,4.7999999999999998,5.7000000000000002,4.9000000000000004,3.5,3.8999999999999999,4.7000000000000002,4.7999999999999998,5.0999999999999996,3.7000000000000002,4.4000000000000004,3.9500000000000002,4.5,4.4000000000000004,3.7000000000000002,3.1000000000000001,2.5,3.7000000000000002,2.7999999999999998,3.3999999999999999,4.2999999999999998,3.3999999999999999,3.7999999999999998,3.3999999999999999,3.7000000000000002,4.0999999999999996,3.2999999999999998,4.0999999999999996,3.7000000000000002,2.8999999999999999],"mode":"markers","marker":{"color":"rgba(77,175,74,1)","size":[17.221052631578946,14.761218836565098,14.914127423822716,18.138504155124654,14.847645429362881,17.673130193905816,18.411080332409973,16.67590027700831,19.654293628808865,19.734072022160664,14.821052631578947,14.914127423822716,19.368421052631579,13.085872576177286,18.171745152354571,14.415512465373961,13.385041551246537,17.806094182825483,12.932963988919667,14.821052631578947,13.650969529085874,14.049861495844874,13.817174515235457,12.520775623268698,17.772853185595569,18.869806094182827,17.074792243767313,14.973961218836566,16.80886426592798,19.235457063711912,16.310249307479225,18.537396121883656,15.844875346260388,16.343490304709142,14.21606648199446,16.077562326869806,16.509695290858726,16.875346260387811,17.739612188365651,15.964542936288089,15.911357340720222,14.275900277008311,14.481994459833794,20,14.481994459833794,16.343490304709142,14.481994459833794,18.331301939058172,18.83656509695291,16.775623268698062,19.933518005540165,17.905817174515235,13.883656509695291],"sizemode":"area","opacity":0.84999999999999998,"line":{"color":"#ffffff","width":1}},"selected":{"marker":{"opacity":0.94999999999999996,"line":{"width":1.2,"color":"#ffffff"}}},"unselected":{"marker":{"opacity":0.14999999999999999,"line":{"width":0}}},"text":["<b>Volvo XC90<\/b><br>Horsepower: 315 HP<br>0–60 mph Time: 7.3 s<br>Weight: 2,077 kg<br>Drivetrain: AWD","<b>Volvo S80<\/b><br>Horsepower: 315 HP<br>0–60 mph Time: 6.5 s<br>Weight: 1,707 kg<br>Drivetrain: AWD","<b>BMW 3 Series<\/b><br>Horsepower: 306 HP<br>0–60 mph Time: 5.1 s<br>Weight: 1,730 kg<br>Drivetrain: AWD","<b>Mercedes-Benz M-Class<\/b><br>Horsepower: 306 HP<br>0–60 mph Time: 6.5 s<br>Weight: 2,215 kg<br>Drivetrain: AWD","<b>Audi S4<\/b><br>Horsepower: 344 HP<br>0–60 mph Time: 5.8 s<br>Weight: 1,720 kg<br>Drivetrain: AWD","<b>BMW X6<\/b><br>Horsepower: 306 HP<br>0–60 mph Time: 6.7 s<br>Weight: 2,145 kg<br>Drivetrain: AWD","<b>Land Rover Range Rover<\/b><br>Horsepower: 340 HP<br>0–60 mph Time: 7.9 s<br>Weight: 2,256 kg<br>Drivetrain: AWD","<b>Mercedes-Benz E-Class<\/b><br>Horsepower: 340 HP<br>0–60 mph Time: 5.1 s<br>Weight: 1,995 kg<br>Drivetrain: AWD","<b>Land Rover Range Rover Sport<\/b><br>Horsepower: 339 HP<br>0–60 mph Time: 6.9 s<br>Weight: 2,443 kg<br>Drivetrain: AWD","<b>Mercedes-Benz GLS-Class<\/b><br>Horsepower: 249 HP<br>0–60 mph Time: 7.8 s<br>Weight: 2,455 kg<br>Drivetrain: AWD","<b>Volkswagen Passat<\/b><br>Horsepower: 275 HP<br>0–60 mph Time: 7.8 s<br>Weight: 1,716 kg<br>Drivetrain: AWD","<b>BMW 3 Series<\/b><br>Horsepower: 233 HP<br>0–60 mph Time: 7.6 s<br>Weight: 1,730 kg<br>Drivetrain: AWD","<b>GMC Yukon<\/b><br>Horsepower: 288 HP<br>0–60 mph Time: 9.5 s<br>Weight: 2,400 kg<br>Drivetrain: AWD","<b>Audi S3<\/b><br>Horsepower: 265 HP<br>0–60 mph Time: 5 s<br>Weight: 1,455 kg<br>Drivetrain: AWD","<b>Mitsubishi Pajero<\/b><br>Horsepower: 250 HP<br>0–60 mph Time: 10.8 s<br>Weight: 2,220 kg<br>Drivetrain: AWD","<b>BMW X1<\/b><br>Horsepower: 245 HP<br>0–60 mph Time: 6.1 s<br>Weight: 1,655 kg<br>Drivetrain: AWD","<b>Subaru Impreza WRX STi<\/b><br>Horsepower: 300 HP<br>0–60 mph Time: 6 s<br>Weight: 1,500 kg<br>Drivetrain: AWD","<b>Nissan Pathfinder<\/b><br>Horsepower: 269 HP<br>0–60 mph Time: 8.9 s<br>Weight: 2,165 kg<br>Drivetrain: AWD","<b>Jaguar X-Type<\/b><br>Horsepower: 231 HP<br>0–60 mph Time: 7 s<br>Weight: 1,432 kg<br>Drivetrain: AWD","<b>Opel Insignia<\/b><br>Horsepower: 195 HP<br>0–60 mph Time: 8.9 s<br>Weight: 1,716 kg<br>Drivetrain: AWD","<b>Audi A4<\/b><br>Horsepower: 200 HP<br>0–60 mph Time: 7.5 s<br>Weight: 1,540 kg<br>Drivetrain: AWD","<b>Hyundai ix35<\/b><br>Horsepower: 136 HP<br>0–60 mph Time: 11.3 s<br>Weight: 1,600 kg<br>Drivetrain: AWD","<b>Jeep Cherokee<\/b><br>Horsepower: 116 HP<br>0–60 mph Time: 12.1 s<br>Weight: 1,565 kg<br>Drivetrain: AWD","<b>VAZ (Lada) 4x4<\/b><br>Horsepower: 79 HP<br>0–60 mph Time: 19 s<br>Weight: 1,370 kg<br>Drivetrain: AWD","<b>Alpina B7<\/b><br>Horsepower: 507 HP<br>0–60 mph Time: 4.8 s<br>Weight: 2,160 kg<br>Drivetrain: AWD","<b>Genesis G90<\/b><br>Horsepower: 413 HP<br>0–60 mph Time: 5.7 s<br>Weight: 2,325 kg<br>Drivetrain: AWD","<b>BMW 6 Series<\/b><br>Horsepower: 407 HP<br>0–60 mph Time: 4.9 s<br>Weight: 2,055 kg<br>Drivetrain: AWD","<b>Nissan GT-R<\/b><br>Horsepower: 485 HP<br>0–60 mph Time: 3.5 s<br>Weight: 1,739 kg<br>Drivetrain: AWD","<b>BMW 8 Series<\/b><br>Horsepower: 530 HP<br>0–60 mph Time: 3.9 s<br>Weight: 2,015 kg<br>Drivetrain: AWD","<b>BMW X5 M<\/b><br>Horsepower: 555 HP<br>0–60 mph Time: 4.7 s<br>Weight: 2,380 kg<br>Drivetrain: AWD","<b>Mercedes-Benz CLS-Class<\/b><br>Horsepower: 408 HP<br>0–60 mph Time: 4.8 s<br>Weight: 1,940 kg<br>Drivetrain: AWD","<b>Mercedes-Benz R-Class<\/b><br>Horsepower: 510 HP<br>0–60 mph Time: 5.1 s<br>Weight: 2,275 kg<br>Drivetrain: AWD","<b>Mercedes-Benz CLS-klasse AMG<\/b><br>Horsepower: 585 HP<br>0–60 mph Time: 3.7 s<br>Weight: 1,870 kg<br>Drivetrain: AWD","<b>BMW 7 Series<\/b><br>Horsepower: 450 HP<br>0–60 mph Time: 4.4 s<br>Weight: 1,945 kg<br>Drivetrain: AWD","<b>Lamborghini Diablo<\/b><br>Horsepower: 530 HP<br>0–60 mph Time: 3.95 s<br>Weight: 1,625 kg<br>Drivetrain: AWD","<b>Mercedes-Benz CLS-Class<\/b><br>Horsepower: 435 HP<br>0–60 mph Time: 4.5 s<br>Weight: 1,905 kg<br>Drivetrain: AWD","<b>Audi S6<\/b><br>Horsepower: 450 HP<br>0–60 mph Time: 4.4 s<br>Weight: 1,970 kg<br>Drivetrain: AWD","<b>Audi RS 6<\/b><br>Horsepower: 605 HP<br>0–60 mph Time: 3.7 s<br>Weight: 2,025 kg<br>Drivetrain: AWD","<b>Porsche Panamera<\/b><br>Horsepower: 630 HP<br>0–60 mph Time: 3.1 s<br>Weight: 2,155 kg<br>Drivetrain: AWD","<b>Bugatti Veyron<\/b><br>Horsepower: 1001 HP<br>0–60 mph Time: 2.5 s<br>Weight: 1,888 kg<br>Drivetrain: AWD","<b>Ferrari FF<\/b><br>Horsepower: 660 HP<br>0–60 mph Time: 3.7 s<br>Weight: 1,880 kg<br>Drivetrain: AWD","<b>Porsche 918<\/b><br>Horsepower: 887 HP<br>0–60 mph Time: 2.8 s<br>Weight: 1,634 kg<br>Drivetrain: AWD","<b>Lamborghini Reventon<\/b><br>Horsepower: 641 HP<br>0–60 mph Time: 3.4 s<br>Weight: 1,665 kg<br>Drivetrain: AWD","<b>Bentley Continental GT<\/b><br>Horsepower: 635 HP<br>0–60 mph Time: 4.3 s<br>Weight: 2,495 kg<br>Drivetrain: AWD","<b>Lamborghini Murcielago<\/b><br>Horsepower: 640 HP<br>0–60 mph Time: 3.4 s<br>Weight: 1,665 kg<br>Drivetrain: AWD","<b>Audi S8<\/b><br>Horsepower: 605 HP<br>0–60 mph Time: 3.8 s<br>Weight: 1,945 kg<br>Drivetrain: AWD","<b>Lamborghini Murcielago<\/b><br>Horsepower: 640 HP<br>0–60 mph Time: 3.4 s<br>Weight: 1,665 kg<br>Drivetrain: AWD","<b>Bentley Continental GT<\/b><br>Horsepower: 635 HP<br>0–60 mph Time: 3.7 s<br>Weight: 2,244 kg<br>Drivetrain: AWD","<b>Bentley Continental GT<\/b><br>Horsepower: 642 HP<br>0–60 mph Time: 4.1 s<br>Weight: 2,320 kg<br>Drivetrain: AWD","<b>BMW M8<\/b><br>Horsepower: 625 HP<br>0–60 mph Time: 3.3 s<br>Weight: 2,010 kg<br>Drivetrain: AWD","<b>Mercedes-Benz G-klasse AMG<\/b><br>Horsepower: 800 HP<br>0–60 mph Time: 4.1 s<br>Weight: 2,485 kg<br>Drivetrain: AWD","<b>BMW 7 Series<\/b><br>Horsepower: 610 HP<br>0–60 mph Time: 3.7 s<br>Weight: 2,180 kg<br>Drivetrain: AWD","<b>Lamborghini Aventador<\/b><br>Horsepower: 700 HP<br>0–60 mph Time: 2.9 s<br>Weight: 1,575 kg<br>Drivetrain: AWD"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"AWD","textfont":{"color":"rgba(77,175,74,1)","size":[17.221052631578946,14.761218836565098,14.914127423822716,18.138504155124654,14.847645429362881,17.673130193905816,18.411080332409973,16.67590027700831,19.654293628808865,19.734072022160664,14.821052631578947,14.914127423822716,19.368421052631579,13.085872576177286,18.171745152354571,14.415512465373961,13.385041551246537,17.806094182825483,12.932963988919667,14.821052631578947,13.650969529085874,14.049861495844874,13.817174515235457,12.520775623268698,17.772853185595569,18.869806094182827,17.074792243767313,14.973961218836566,16.80886426592798,19.235457063711912,16.310249307479225,18.537396121883656,15.844875346260388,16.343490304709142,14.21606648199446,16.077562326869806,16.509695290858726,16.875346260387811,17.739612188365651,15.964542936288089,15.911357340720222,14.275900277008311,14.481994459833794,20,14.481994459833794,16.343490304709142,14.481994459833794,18.331301939058172,18.83656509695291,16.775623268698062,19.933518005540165,17.905817174515235,13.883656509695291]},"error_y":{"color":"rgba(77,175,74,1)","width":[]},"error_x":{"color":"rgba(77,175,74,1)","width":[]},"line":{"color":"rgba(77,175,74,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[211,225,204,250,220,117,117,115,150,155,185,103,144,143,109,113,120,130,115,103,106,150,140,192,90,90,75,90,73,90,97,90,97,82,84,67,90,86,90,90,67,87],"y":[6.9000000000000004,6.7999999999999998,9.9000000000000004,7,7.2999999999999998,14.5,12.9,12.6,9,9.4000000000000004,8.8000000000000007,11.800000000000001,13.1,8.6999999999999993,12.5,11.300000000000001,10.1,8.5999999999999996,10.800000000000001,11,11.1,10.4,10.800000000000001,8.1999999999999993,11.300000000000001,13.699999999999999,12.6,13.699999999999999,13.1,14.199999999999999,12.300000000000001,13.6,13,14.800000000000001,11.5,11.699999999999999,11.5,12.5,14.699999999999999,12.5,15.800000000000001,14.699999999999999],"mode":"markers","marker":{"color":"rgba(228,26,28,1)","size":[13.418282548476455,13.444875346260389,15.013850415512465,14.315789473684211,13.085872576177286,15.878116343490305,13.438227146814405,13.21218836565097,11.523545706371191,13.418282548476455,13.019390581717452,11.24432132963989,13.650969529085874,10.526315789473685,12.088642659279778,11.490304709141274,11.177839335180057,10.326869806094184,10.426592797783933,11.038227146814403,11.32409972299169,14.049861495844874,14.23601108033241,13.650969529085874,10.639335180055401,11.423822714681441,10.227146814404431,11.257617728531855,10.526315789473685,11.05152354570637,10.446537396121883,11.32409972299169,11.523545706371191,10.559556786703601,9.8614958448753463,8,11.968975069252078,10.699168975069252,11.550138504155125,10.233795013850415,10.818836565096953,12.540720221606648],"sizemode":"area","opacity":0.84999999999999998,"line":{"color":"#ffffff","width":1}},"selected":{"marker":{"opacity":0.94999999999999996,"line":{"width":1.2,"color":"#ffffff"}}},"unselected":{"marker":{"opacity":0.14999999999999999,"line":{"width":0}}},"text":["<b>Audi A5<\/b><br>Horsepower: 211 HP<br>0–60 mph Time: 6.9 s<br>Weight: 1,505 kg<br>Drivetrain: FWD","<b>Ford Focus<\/b><br>Horsepower: 225 HP<br>0–60 mph Time: 6.8 s<br>Weight: 1,509 kg<br>Drivetrain: FWD","<b>Volkswagen Sharan<\/b><br>Horsepower: 204 HP<br>0–60 mph Time: 9.9 s<br>Weight: 1,745 kg<br>Drivetrain: FWD","<b>Chrysler Intrepid<\/b><br>Horsepower: 250 HP<br>0–60 mph Time: 7 s<br>Weight: 1,640 kg<br>Drivetrain: FWD","<b>Lancia Kappa<\/b><br>Horsepower: 220 HP<br>0–60 mph Time: 7.3 s<br>Weight: 1,455 kg<br>Drivetrain: FWD","<b>Opel Vivaro<\/b><br>Horsepower: 117 HP<br>0–60 mph Time: 14.5 s<br>Weight: 1,875 kg<br>Drivetrain: FWD","<b>Nissan Qashqai+2<\/b><br>Horsepower: 117 HP<br>0–60 mph Time: 12.9 s<br>Weight: 1,508 kg<br>Drivetrain: FWD","<b>Peugeot 3008<\/b><br>Horsepower: 115 HP<br>0–60 mph Time: 12.6 s<br>Weight: 1,474 kg<br>Drivetrain: FWD","<b>Audi A3<\/b><br>Horsepower: 150 HP<br>0–60 mph Time: 9 s<br>Weight: 1,220 kg<br>Drivetrain: FWD","<b>Audi A4<\/b><br>Horsepower: 155 HP<br>0–60 mph Time: 9.4 s<br>Weight: 1,505 kg<br>Drivetrain: FWD","<b>Alfa Romeo 159<\/b><br>Horsepower: 185 HP<br>0–60 mph Time: 8.8 s<br>Weight: 1,445 kg<br>Drivetrain: FWD","<b>Daewoo Nubira<\/b><br>Horsepower: 103 HP<br>0–60 mph Time: 11.8 s<br>Weight: 1,178 kg<br>Drivetrain: FWD","<b>Mazda 5<\/b><br>Horsepower: 144 HP<br>0–60 mph Time: 13.1 s<br>Weight: 1,540 kg<br>Drivetrain: FWD","<b>Toyota Celica<\/b><br>Horsepower: 143 HP<br>0–60 mph Time: 8.7 s<br>Weight: 1,070 kg<br>Drivetrain: FWD","<b>Chevrolet Cruze<\/b><br>Horsepower: 109 HP<br>0–60 mph Time: 12.5 s<br>Weight: 1,305 kg<br>Drivetrain: FWD","<b>Renault Megane<\/b><br>Horsepower: 113 HP<br>0–60 mph Time: 11.3 s<br>Weight: 1,215 kg<br>Drivetrain: FWD","<b>Ford Fiesta<\/b><br>Horsepower: 120 HP<br>0–60 mph Time: 10.1 s<br>Weight: 1,168 kg<br>Drivetrain: FWD","<b>Fiat Punto<\/b><br>Horsepower: 130 HP<br>0–60 mph Time: 8.6 s<br>Weight: 1,040 kg<br>Drivetrain: FWD","<b>Volkswagen Quantum<\/b><br>Horsepower: 115 HP<br>0–60 mph Time: 10.8 s<br>Weight: 1,055 kg<br>Drivetrain: FWD","<b>Alfa Romeo 145<\/b><br>Horsepower: 103 HP<br>0–60 mph Time: 11 s<br>Weight: 1,147 kg<br>Drivetrain: FWD","<b>Renault Megane<\/b><br>Horsepower: 106 HP<br>0–60 mph Time: 11.1 s<br>Weight: 1,190 kg<br>Drivetrain: FWD","<b>Saab 3-Sep<\/b><br>Horsepower: 150 HP<br>0–60 mph Time: 10.4 s<br>Weight: 1,600 kg<br>Drivetrain: FWD","<b>Opel Zafira<\/b><br>Horsepower: 140 HP<br>0–60 mph Time: 10.8 s<br>Weight: 1,628 kg<br>Drivetrain: FWD","<b>Opel Zafira<\/b><br>Horsepower: 192 HP<br>0–60 mph Time: 8.2 s<br>Weight: 1,540 kg<br>Drivetrain: FWD","<b>Honda Civic<\/b><br>Horsepower: 90 HP<br>0–60 mph Time: 11.3 s<br>Weight: 1,087 kg<br>Drivetrain: FWD","<b>Audi A3<\/b><br>Horsepower: 90 HP<br>0–60 mph Time: 13.7 s<br>Weight: 1,205 kg<br>Drivetrain: FWD","<b>Toyota Yaris<\/b><br>Horsepower: 75 HP<br>0–60 mph Time: 12.6 s<br>Weight: 1,025 kg<br>Drivetrain: FWD","<b>Renault Megane<\/b><br>Horsepower: 90 HP<br>0–60 mph Time: 13.7 s<br>Weight: 1,180 kg<br>Drivetrain: FWD","<b>Audi 80<\/b><br>Horsepower: 73 HP<br>0–60 mph Time: 13.1 s<br>Weight: 1,070 kg<br>Drivetrain: FWD","<b>Honda Civic<\/b><br>Horsepower: 90 HP<br>0–60 mph Time: 14.2 s<br>Weight: 1,149 kg<br>Drivetrain: FWD","<b>Hyundai Accent<\/b><br>Horsepower: 97 HP<br>0–60 mph Time: 12.3 s<br>Weight: 1,058 kg<br>Drivetrain: FWD","<b>Audi 80<\/b><br>Horsepower: 90 HP<br>0–60 mph Time: 13.6 s<br>Weight: 1,190 kg<br>Drivetrain: FWD","<b>Toyota Auris<\/b><br>Horsepower: 97 HP<br>0–60 mph Time: 13 s<br>Weight: 1,220 kg<br>Drivetrain: FWD","<b>Peugeot 208<\/b><br>Horsepower: 82 HP<br>0–60 mph Time: 14.8 s<br>Weight: 1,075 kg<br>Drivetrain: FWD","<b>Opel Kadett<\/b><br>Horsepower: 84 HP<br>0–60 mph Time: 11.5 s<br>Weight:   970 kg<br>Drivetrain: FWD","<b>Suzuki Swift<\/b><br>Horsepower: 67 HP<br>0–60 mph Time: 11.7 s<br>Weight:   690 kg<br>Drivetrain: FWD","<b>Peugeot 308<\/b><br>Horsepower: 90 HP<br>0–60 mph Time: 11.5 s<br>Weight: 1,287 kg<br>Drivetrain: FWD","<b>Daewoo Lanos<\/b><br>Horsepower: 86 HP<br>0–60 mph Time: 12.5 s<br>Weight: 1,096 kg<br>Drivetrain: FWD","<b>Volkswagen Passat<\/b><br>Horsepower: 90 HP<br>0–60 mph Time: 14.7 s<br>Weight: 1,224 kg<br>Drivetrain: FWD","<b>Peugeot 405<\/b><br>Horsepower: 90 HP<br>0–60 mph Time: 12.5 s<br>Weight: 1,026 kg<br>Drivetrain: FWD","<b>Ford Fiesta<\/b><br>Horsepower: 67 HP<br>0–60 mph Time: 15.8 s<br>Weight: 1,114 kg<br>Drivetrain: FWD","<b>Opel Astra<\/b><br>Horsepower: 87 HP<br>0–60 mph Time: 14.7 s<br>Weight: 1,373 kg<br>Drivetrain: FWD"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"FWD","textfont":{"color":"rgba(228,26,28,1)","size":[13.418282548476455,13.444875346260389,15.013850415512465,14.315789473684211,13.085872576177286,15.878116343490305,13.438227146814405,13.21218836565097,11.523545706371191,13.418282548476455,13.019390581717452,11.24432132963989,13.650969529085874,10.526315789473685,12.088642659279778,11.490304709141274,11.177839335180057,10.326869806094184,10.426592797783933,11.038227146814403,11.32409972299169,14.049861495844874,14.23601108033241,13.650969529085874,10.639335180055401,11.423822714681441,10.227146814404431,11.257617728531855,10.526315789473685,11.05152354570637,10.446537396121883,11.32409972299169,11.523545706371191,10.559556786703601,9.8614958448753463,8,11.968975069252078,10.699168975069252,11.550138504155125,10.233795013850415,10.818836565096953,12.540720221606648]},"error_y":{"color":"rgba(228,26,28,1)","width":[]},"error_x":{"color":"rgba(228,26,28,1)","width":[]},"line":{"color":"rgba(228,26,28,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[339,309,326,324,380,304,345,350,345,329,306,306,350,324,315,367,235,204,204,202,258,265,245,218,220,258,170,150,64,77,90,84,52,74,470,408,487,580,476,418,557,557,408,495,432,570,630,620,630,660,630,630,630,620,603],"y":[6.2000000000000002,6,6.2999999999999998,5.4000000000000004,8,6,4.7000000000000002,6.5,4.9000000000000004,5.7000000000000002,5.5,5.2000000000000002,6.2999999999999998,5.2000000000000002,5.9000000000000004,5.2000000000000002,12.199999999999999,7.7999999999999998,7.5999999999999996,7.5,6,6.0999999999999996,6,8.0999999999999996,8.0999999999999996,5.5999999999999996,8.5,10.199999999999999,23,13,10.800000000000001,10.9,19.800000000000001,15,4,4.9000000000000004,4.5,3.3999999999999999,4.2000000000000002,4.2999999999999998,4.2000000000000002,4.2000000000000002,5.0999999999999996,4.2999999999999998,5,3.3999999999999999,4.0999999999999996,3.7000000000000002,4.4000000000000004,3.6499999999999999,4.2999999999999998,4.2999999999999998,4.0999999999999996,3.5,3.5],"mode":"markers","marker":{"color":"rgba(55,126,184,1)","size":[15.831578947368421,14.428808864265928,15.878116343490305,13.850415512465375,15.51246537396122,14.481994459833794,13.019390581717452,14.45540166204986,13.119113573407201,14.355678670360112,16.928531855955679,13.418282548476455,13.418282548476455,13.584487534626039,14.249307479224377,14.382271468144044,15.339612188365651,14.814404432132964,14.149584487534625,13.418282548476455,14.116343490304709,13.052631578947368,13.551246537396121,14.149584487534625,14.754570637119114,14.614958448753463,13.950138504155124,13.35180055401662,10.193905817174516,11.05152354570637,10.180609418282549,8.5983379501385038,8.6980609418282544,10.114127423822715,15.113573407202216,16.409972299168974,14.847645429362881,13.444875346260389,15.711911357340719,14.282548476454293,15.844875346260388,15.678670360110804,15.346260387811634,14.481994459833794,15.199999999999999,13.285318559556787,17.440443213296398,14.64819944598338,18.337950138504155,12.48753462603878,18.371191135734072,18.371191135734072,18.70360110803324,12.520775623268698,14.973961218836566],"sizemode":"area","opacity":0.84999999999999998,"line":{"color":"#ffffff","width":1}},"selected":{"marker":{"opacity":0.94999999999999996,"line":{"width":1.2,"color":"#ffffff"}}},"unselected":{"marker":{"opacity":0.14999999999999999,"line":{"width":0}}},"text":["<b>Infiniti M-Series<\/b><br>Horsepower: 339 HP<br>0–60 mph Time: 6.2 s<br>Weight: 1,868 kg<br>Drivetrain: RWD","<b>Ford Mustang<\/b><br>Horsepower: 309 HP<br>0–60 mph Time: 6 s<br>Weight: 1,657 kg<br>Drivetrain: RWD","<b>Jaguar XJR<\/b><br>Horsepower: 326 HP<br>0–60 mph Time: 6.3 s<br>Weight: 1,875 kg<br>Drivetrain: RWD","<b>Cadillac ATS<\/b><br>Horsepower: 324 HP<br>0–60 mph Time: 5.4 s<br>Weight: 1,570 kg<br>Drivetrain: RWD","<b>Hyundai Rohens<\/b><br>Horsepower: 380 HP<br>0–60 mph Time: 8 s<br>Weight: 1,820 kg<br>Drivetrain: RWD","<b>Lexus GS<\/b><br>Horsepower: 304 HP<br>0–60 mph Time: 6 s<br>Weight: 1,665 kg<br>Drivetrain: RWD","<b>Porsche 911<\/b><br>Horsepower: 345 HP<br>0–60 mph Time: 4.7 s<br>Weight: 1,445 kg<br>Drivetrain: RWD","<b>Chevrolet Chevelle<\/b><br>Horsepower: 350 HP<br>0–60 mph Time: 6.5 s<br>Weight: 1,661 kg<br>Drivetrain: RWD","<b>Chevrolet Corvette<\/b><br>Horsepower: 345 HP<br>0–60 mph Time: 4.9 s<br>Weight: 1,460 kg<br>Drivetrain: RWD","<b>Chevrolet Lumina<\/b><br>Horsepower: 329 HP<br>0–60 mph Time: 5.7 s<br>Weight: 1,646 kg<br>Drivetrain: RWD","<b>Tesla Model S<\/b><br>Horsepower: 306 HP<br>0–60 mph Time: 5.5 s<br>Weight: 2,033 kg<br>Drivetrain: RWD","<b>BMW Z4<\/b><br>Horsepower: 306 HP<br>0–60 mph Time: 5.2 s<br>Weight: 1,505 kg<br>Drivetrain: RWD","<b>Chevrolet Chevelle<\/b><br>Horsepower: 350 HP<br>0–60 mph Time: 6.3 s<br>Weight: 1,505 kg<br>Drivetrain: RWD","<b>BMW 1 Series<\/b><br>Horsepower: 324 HP<br>0–60 mph Time: 5.2 s<br>Weight: 1,530 kg<br>Drivetrain: RWD","<b>Lexus IS<\/b><br>Horsepower: 315 HP<br>0–60 mph Time: 5.9 s<br>Weight: 1,630 kg<br>Drivetrain: RWD","<b>BMW 6 Series<\/b><br>Horsepower: 367 HP<br>0–60 mph Time: 5.2 s<br>Weight: 1,650 kg<br>Drivetrain: RWD","<b>Chevrolet Impala<\/b><br>Horsepower: 235 HP<br>0–60 mph Time: 12.2 s<br>Weight: 1,794 kg<br>Drivetrain: RWD","<b>Mercedes-Benz E-Class<\/b><br>Horsepower: 204 HP<br>0–60 mph Time: 7.8 s<br>Weight: 1,715 kg<br>Drivetrain: RWD","<b>BMW 3 Series<\/b><br>Horsepower: 204 HP<br>0–60 mph Time: 7.6 s<br>Weight: 1,615 kg<br>Drivetrain: RWD","<b>Cadillac ATS<\/b><br>Horsepower: 202 HP<br>0–60 mph Time: 7.5 s<br>Weight: 1,505 kg<br>Drivetrain: RWD","<b>Mercedes-Benz C-Class<\/b><br>Horsepower: 258 HP<br>0–60 mph Time: 6 s<br>Weight: 1,610 kg<br>Drivetrain: RWD","<b>BMW 1 Series<\/b><br>Horsepower: 265 HP<br>0–60 mph Time: 6.1 s<br>Weight: 1,450 kg<br>Drivetrain: RWD","<b>BMW 3 Series<\/b><br>Horsepower: 245 HP<br>0–60 mph Time: 6 s<br>Weight: 1,525 kg<br>Drivetrain: RWD","<b>Mercedes-Benz C-Class<\/b><br>Horsepower: 218 HP<br>0–60 mph Time: 8.1 s<br>Weight: 1,615 kg<br>Drivetrain: RWD","<b>Mercedes-Benz W124<\/b><br>Horsepower: 220 HP<br>0–60 mph Time: 8.1 s<br>Weight: 1,706 kg<br>Drivetrain: RWD","<b>BMW 3 Series<\/b><br>Horsepower: 258 HP<br>0–60 mph Time: 5.6 s<br>Weight: 1,685 kg<br>Drivetrain: RWD","<b>Mercedes-Benz C-Class<\/b><br>Horsepower: 170 HP<br>0–60 mph Time: 8.5 s<br>Weight: 1,585 kg<br>Drivetrain: RWD","<b>Mercedes-Benz E-Class<\/b><br>Horsepower: 150 HP<br>0–60 mph Time: 10.2 s<br>Weight: 1,495 kg<br>Drivetrain: RWD","<b>VAZ (Lada) 2104<\/b><br>Horsepower: 64 HP<br>0–60 mph Time: 23 s<br>Weight: 1,020 kg<br>Drivetrain: RWD","<b>Toyota Celica<\/b><br>Horsepower: 77 HP<br>0–60 mph Time: 13 s<br>Weight: 1,149 kg<br>Drivetrain: RWD","<b>Renault Twingo<\/b><br>Horsepower: 90 HP<br>0–60 mph Time: 10.8 s<br>Weight: 1,018 kg<br>Drivetrain: RWD","<b>Smart Fortwo<\/b><br>Horsepower: 84 HP<br>0–60 mph Time: 10.9 s<br>Weight:   780 kg<br>Drivetrain: RWD","<b>Opel Kadett<\/b><br>Horsepower: 52 HP<br>0–60 mph Time: 19.8 s<br>Weight:   795 kg<br>Drivetrain: RWD","<b>IZH 2717<\/b><br>Horsepower: 74 HP<br>0–60 mph Time: 15 s<br>Weight: 1,008 kg<br>Drivetrain: RWD","<b>Aston Martin DB9<\/b><br>Horsepower: 470 HP<br>0–60 mph Time: 4 s<br>Weight: 1,760 kg<br>Drivetrain: RWD","<b>Mercedes-Benz CLS-Class<\/b><br>Horsepower: 408 HP<br>0–60 mph Time: 4.9 s<br>Weight: 1,955 kg<br>Drivetrain: RWD","<b>Mercedes-Benz C-Class<\/b><br>Horsepower: 487 HP<br>0–60 mph Time: 4.5 s<br>Weight: 1,720 kg<br>Drivetrain: RWD","<b>Lamborghini Huracan<\/b><br>Horsepower: 580 HP<br>0–60 mph Time: 3.4 s<br>Weight: 1,509 kg<br>Drivetrain: RWD","<b>Mercedes-Benz C-Class<\/b><br>Horsepower: 476 HP<br>0–60 mph Time: 4.2 s<br>Weight: 1,850 kg<br>Drivetrain: RWD","<b>Ford Mustang<\/b><br>Horsepower: 418 HP<br>0–60 mph Time: 4.3 s<br>Weight: 1,635 kg<br>Drivetrain: RWD","<b>Mercedes-Benz CLS-Class<\/b><br>Horsepower: 557 HP<br>0–60 mph Time: 4.2 s<br>Weight: 1,870 kg<br>Drivetrain: RWD","<b>Mercedes-Benz E-Class<\/b><br>Horsepower: 557 HP<br>0–60 mph Time: 4.2 s<br>Weight: 1,845 kg<br>Drivetrain: RWD","<b>Mercedes-Benz E-Class<\/b><br>Horsepower: 408 HP<br>0–60 mph Time: 5.1 s<br>Weight: 1,795 kg<br>Drivetrain: RWD","<b>Jaguar F-Type<\/b><br>Horsepower: 495 HP<br>0–60 mph Time: 4.3 s<br>Weight: 1,665 kg<br>Drivetrain: RWD","<b>Chevrolet Camaro<\/b><br>Horsepower: 432 HP<br>0–60 mph Time: 5 s<br>Weight: 1,773 kg<br>Drivetrain: RWD","<b>Ferrari 458<\/b><br>Horsepower: 570 HP<br>0–60 mph Time: 3.4 s<br>Weight: 1,485 kg<br>Drivetrain: RWD","<b>Mercedes-Benz S-Class<\/b><br>Horsepower: 630 HP<br>0–60 mph Time: 4.1 s<br>Weight: 2,110 kg<br>Drivetrain: RWD","<b>Ferrari 599<\/b><br>Horsepower: 620 HP<br>0–60 mph Time: 3.7 s<br>Weight: 1,690 kg<br>Drivetrain: RWD","<b>Mercedes-Benz CL-Class<\/b><br>Horsepower: 630 HP<br>0–60 mph Time: 4.4 s<br>Weight: 2,245 kg<br>Drivetrain: RWD","<b>Ferrari Enzo<\/b><br>Horsepower: 660 HP<br>0–60 mph Time: 3.65 s<br>Weight: 1,365 kg<br>Drivetrain: RWD","<b>Mercedes-Benz S-Class<\/b><br>Horsepower: 630 HP<br>0–60 mph Time: 4.3 s<br>Weight: 2,250 kg<br>Drivetrain: RWD","<b>Mercedes-Benz S-klasse AMG<\/b><br>Horsepower: 630 HP<br>0–60 mph Time: 4.3 s<br>Weight: 2,250 kg<br>Drivetrain: RWD","<b>Mercedes-Benz Maybach S-klasse<\/b><br>Horsepower: 630 HP<br>0–60 mph Time: 4.1 s<br>Weight: 2,300 kg<br>Drivetrain: RWD","<b>Porsche 911<\/b><br>Horsepower: 620 HP<br>0–60 mph Time: 3.5 s<br>Weight: 1,370 kg<br>Drivetrain: RWD","<b>Aston Martin Vanquish<\/b><br>Horsepower: 603 HP<br>0–60 mph Time: 3.5 s<br>Weight: 1,739 kg<br>Drivetrain: RWD"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"RWD","textfont":{"color":"rgba(55,126,184,1)","size":[15.831578947368421,14.428808864265928,15.878116343490305,13.850415512465375,15.51246537396122,14.481994459833794,13.019390581717452,14.45540166204986,13.119113573407201,14.355678670360112,16.928531855955679,13.418282548476455,13.418282548476455,13.584487534626039,14.249307479224377,14.382271468144044,15.339612188365651,14.814404432132964,14.149584487534625,13.418282548476455,14.116343490304709,13.052631578947368,13.551246537396121,14.149584487534625,14.754570637119114,14.614958448753463,13.950138504155124,13.35180055401662,10.193905817174516,11.05152354570637,10.180609418282549,8.5983379501385038,8.6980609418282544,10.114127423822715,15.113573407202216,16.409972299168974,14.847645429362881,13.444875346260389,15.711911357340719,14.282548476454293,15.844875346260388,15.678670360110804,15.346260387811634,14.481994459833794,15.199999999999999,13.285318559556787,17.440443213296398,14.64819944598338,18.337950138504155,12.48753462603878,18.371191135734072,18.371191135734072,18.70360110803324,12.520775623268698,14.973961218836566]},"error_y":{"color":"rgba(55,126,184,1)","width":[]},"error_x":{"color":"rgba(55,126,184,1)","width":[]},"line":{"color":"rgba(55,126,184,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  function initHighlight() {
+    var gd = document.querySelector('.plotly.html-widget');
+    var sliderInput = window.jQuery && window.jQuery('#hp_filter input');
+    var slider = sliderInput && sliderInput.data('ionRangeSlider');
+
+    if (gd && gd.data && gd._fullLayout && slider) {
+      function updateHighlight(fromHp, toHp) {
+        var dtSelect = document.getElementById('drivetrain-filter');
+        var selectedDt = dtSelect ? dtSelect.value : 'ALL';
+
+        var selectedTraces = [];
+        var selectedPointsArray = [];
+        var opacitiesArray = [];
+        var totalMatching = 0;
+
+        for (var i = 0; i < gd.data.length; i++) {
+          var tr = gd.data[i];
+          var matches = [];
+          var opacities = [];
+          var isDtMatch = (selectedDt === 'ALL' || tr.name === selectedDt);
+
+          if (tr.x) {
+            for (var j = 0; j < tr.x.length; j++) {
+              var inRange = (tr.x[j] >= fromHp && tr.x[j] <= toHp);
+              if (isDtMatch && inRange) {
+                matches.push(j);
+                opacities.push(0.95);
+              } else {
+                opacities.push(0.15);
+              }
+            }
+          }
+
+          selectedTraces.push(i);
+          selectedPointsArray.push(matches);
+          opacitiesArray.push(opacities);
+          totalMatching += matches.length;
+        }
+
+        Plotly.restyle(gd, {
+          'selectedpoints': selectedPointsArray,
+          'marker.opacity': opacitiesArray
+        }, selectedTraces);
+
+        var countEl = document.getElementById('car-count');
+        var minEl = document.getElementById('hp-min-val');
+        var maxEl = document.getElementById('hp-max-val');
+        var driveEl = document.getElementById('drivetrain-val');
+        var alertEl = document.getElementById('no-cars-alert');
+
+        if (countEl) countEl.textContent = totalMatching;
+        if (minEl) minEl.textContent = fromHp;
+        if (maxEl) maxEl.textContent = toHp;
+        if (driveEl && dtSelect) driveEl.textContent = dtSelect.options[dtSelect.selectedIndex].text;
+
+        if (alertEl) {
+          alertEl.style.display = (totalMatching === 0) ? 'block' : 'none';
+        }
+      }
+
+      // Initial highlight with starting slider range
+      updateHighlight(slider.result.from, slider.result.to);
+
+      // Smoothly update highlighting as slider handles move
+      window.jQuery(document).on('change input', '#hp_filter input', function() {
+        var s = window.jQuery(this).data('ionRangeSlider');
+        if (s) {
+          updateHighlight(s.result.from, s.result.to);
+        }
+      });
+
+      // Update when drivetrain selector changes
+      window.jQuery('#drivetrain-filter').on('change', function() {
+        var s = window.jQuery('#hp_filter input').data('ionRangeSlider');
+        var fromVal = s ? s.result.from : 52;
+        var toVal = s ? s.result.to : 1001;
+        updateHighlight(fromVal, toVal);
+      });
+    } else {
+      setTimeout(initHighlight, 50);
+    }
+  }
+  initHighlight();
+});
+</script>
+</div>
+</div>
+</section>
+</section>
+<section id="what-i-want-to-investigate" class="level2">
+<h2 class="anchored" data-anchor-id="what-i-want-to-investigate">What I Want to Investigate</h2>
+<p>While higher horsepower clearly leads to faster acceleration times, horsepower alone does not tell the whole story. I want to examine how curb weight counteracts engine output, and how traction from different drivetrain systems (like All-Wheel Drive versus Front- or Rear-Wheel Drive) impacts off-the-line launch speed. By comparing these variables together, we can better understand which factors have the biggest effect on real-world vehicle performance.</p>
+</section>
+<section id="future-simulator" class="level2">
+<h2 class="anchored" data-anchor-id="future-simulator">Future Simulator</h2>
+<p>For the final project, I will translate these empirical relationships into an interactive car performance simulator. Users will be able to input or tweak specific car specifications—such as horsepower, vehicle curb weight, drivetrain configuration, and engine displacement—and instantly see estimated acceleration figures and performance metrics.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
